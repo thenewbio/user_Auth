@@ -1,27 +1,30 @@
 <?php
-if(isset($_POST['submit'])){
-    $username = $_POST['fullname'];
-    $email = $_POST['email'];
-    $password = $_POST['password'];
+$username = $_POST['fullname'];
+$email = $_POST['email'];
+$password = $_POST['password'];
 
-registerUser($username , $email , $password);
+// $userdata = $_POST;
+// $data = implode(" ",$userdata);
+$user = [
+    "name" => $username, "email" => $email, "password" => $password,
+];
+
+// print_r($user);
+$file = "../storage/users.csv";
+$handle = fopen($file, "a");
+$fputcsv = fputcsv($handle, $user);
+fclose($handle);
+if ($fputcsv) {
+    echo " <script>alert('User Successfully registered');
+        window.location='../forms/login.html';
+    </script>";
 
 }
 
-function registerUser($username, $email, $password){
+function registerUser($username, $email, $password)
+{
     //save data into the file
-    
-$open_file = fopen("../storage/users.csv ", "a");
-$str = strtolower($email);
-$data = array(
-    "fullname" => $username ,
-    "email" => $str ,
-    "password" => $password
-);
-// $data = implode(",\n ", $userdata);
-fputcsv($open_file , $data );
-    echo "User Successfully registered";
+
+    // echo "OKAY";
 }
 // echo "HANDLE THIS PAGE";
-
-

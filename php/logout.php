@@ -1,18 +1,18 @@
 <?php
 session_start();
-// unset($_SESSION["username"]);
-// unset($_SESSION["email"]);
-// header("Location:login.php");
-function logout(){
-    /*
-Check if the existing user has a session
-if it does
-destroy the session and redirect to login page
-*/
-unset($_SESSION["username"]);
-unset($_SESSION["email"]);
-header("Location:login.php");
+if (!isset($_SESSION['user'])) {
+
+    header('location:forms/login.html');
 
 }
+function logout()
+{
+//remove all session variable
+    session_unset();
+//destroy session
+    session_destroy();
+//redirect to login page
+    header('location:../forms/login.html');
 
-echo "HANDLE THIS PAGE";
+}
+logout();

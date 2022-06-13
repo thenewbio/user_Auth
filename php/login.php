@@ -1,39 +1,36 @@
 <?php
+//get user input
+$email = $_POST['email'];
+$password = $_POST['password'];
+
+$path = "../storage/users.csv"; //file path
+$open = fopen($path, "r");
+$file = file_get_contents("../storage/users.csv");
+
 session_start();
+$csv = array_map('str_getcsv', file('../storage/users.csv'));
+$column_name = array_column($csv, 0);
+$column_email = array_column($csv, 1);
+$column_password = array_column($csv, 2);
+$search = array_search($email, $column_email);
+$search_password = array_search($password, $column_password);
 
-if(isset($_POST['submit'])){
-    $email = $_POST['email'];
-    $password = $_POST['password'];
+//save the row where the user is present in the variable
+$row = ($csv[$search]);
+//extract only the name and stored in a session variable
+$_SESSION['user'] = ($row[0]);
+//extract only the email
+$db_email = ($row[1]);
+//extract only the password
+$db_password = ($row[2]);
 
-  loginUser($email, $password);
-
-}
-
-function loginUser($email, $password){
-    $success = false;
-    
-    $handle = fopen('../storage/users.csv', 'r');
-    
-    while (($data = fgetcsv($handle)) !== FALSE) {
-        $str = strtolower($email);
-        if ($data[1] == $str && $data[2] == $password) {
-            $success = true;
-            break;
-        }
-    }
-    fclose($handle);
-    
-    if ($success) {
-        // they logged in ok
-      $_SESSION["email"] = $str;
-      header("Location: dashboard.php");
-    } else {
-        // login failed
-        header("Location: login.html");
-    }
-
+if ($db_email == $email and $db_password == $password) {
+    echo '<script>alert("Welcome ' . $_SESSION['user'] . ' ");
+              window.location="../dashboard.php";
+              </script>';
+} else {
+    echo '<script>alert("Invalid Username or Password");
+              window.location="../forms/login.html";
+              </script>';
 
 }
-
-// echo "HANDLE THIS PAGE";
-
